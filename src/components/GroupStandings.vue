@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 import { useTournamentStore } from '../store/tournamentStore.js'
-import { computeGroupStandings, getGroupWinner } from '../utils/bracket.js'
+import { computeGroupStandings, getGroupWinner, isGroupComplete } from '../utils/bracket.js'
 
 const props = defineProps({ group: { type: String, required: true } })
 const store = useTournamentStore()
+const complete = computed(() => isGroupComplete(props.group, store.matches))
 
 const rows = computed(() => {
   const stats = computeGroupStandings(props.group, store.matches)
@@ -55,8 +56,11 @@ function coupleLabel(coupleId) {
         </tr>
       </tbody>
     </table>
-    <p v-if="rows.length && !winnerId" class="p-2 text-xs text-amber-700">
+    <p v-if="rows.length && complete && !winnerId" class="p-2 text-xs text-amber-700">
       Chưa xác định được đội nhất bảng — Admin cần chọn thủ công (dùng ô "tự động" ở mỗi trận Vòng 3 để chỉ định).
+    </p>
+    <p v-else-if="rows.length && !complete" class="p-2 text-xs text-slate-400">
+      Đang thi đấu — bảng xếp hạng sẽ cập nhật khi có kết quả mới.
     </p>
   </div>
 </template>

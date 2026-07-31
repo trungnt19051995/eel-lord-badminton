@@ -59,6 +59,9 @@ function handleReset() {
 
     <div v-else class="space-y-3">
       <p class="text-sm text-emerald-700">Đã đăng nhập với quyền Admin.</p>
+      <p v-if="store.syncError" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        Lỗi đồng bộ dữ liệu: {{ store.syncError }} — kiểm tra kết nối mạng hoặc cấu hình Firebase.
+      </p>
       <div class="flex flex-wrap gap-2">
         <button class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" @click="handleExport">Export JSON</button>
         <label class="cursor-pointer rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700">

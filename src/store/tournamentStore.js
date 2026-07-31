@@ -10,25 +10,36 @@ export const useTournamentStore = defineStore('tournament', {
     matches: [],
     rules: '',
     loaded: false,
+    syncError: null,
   }),
   actions: {
     init() {
       const cached = loadCache()
       if (cached) this.$patch(cached)
 
-      subscribeTournament((data) => {
-        this.loaded = true
-        if (data) {
-          this.$patch(data)
-          saveCache(data)
-        } else {
-          this.seedIfEmpty()
-        }
-      })
+      subscribeTournament(
+        (data) => {
+          this.loaded = true
+          this.syncError = null
+          if (data) {
+            this.$patch(data)
+            saveCache(data)
+          } else {
+            this.seedIfEmpty()
+          }
+        },
+        (error) => {
+          this.syncError = error.message
+        },
+      )
     },
     seedIfEmpty() {
       if (this.couples.length > 0) return
-      this.$patch({ couples: defaultCouples, matches: defaultMatches, rules: defaultRules })
+      this.$patch({
+        couples: structuredClone(defaultCouples),
+        matches: structuredClone(defaultMatches),
+        rules: defaultRules,
+      })
       this.persist()
     },
     persist() {
@@ -36,6 +47,12 @@ export const useTournamentStore = defineStore('tournament', {
       persistTimer = setTimeout(() => {
         const data = { couples: this.couples, matches: this.matches, rules: this.rules }
         writeTournament(data)
+          .then(() => {
+            this.syncError = null
+          })
+          .catch((error) => {
+            this.syncError = error.message
+          })
         saveCache(data)
       }, 300)
     },
@@ -98,7 +115,11 @@ export const useTournamentStore = defineStore('tournament', {
       this.persist()
     },
     resetData() {
-      this.$patch({ couples: defaultCouples, matches: defaultMatches, rules: defaultRules })
+      this.$patch({
+        couples: structuredClone(defaultCouples),
+        matches: structuredClone(defaultMatches),
+        rules: defaultRules,
+      })
       this.persist()
     },
   },

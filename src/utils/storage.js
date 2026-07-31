@@ -4,11 +4,15 @@ import { db } from './firebase.js'
 const TOURNAMENT_PATH = 'tournament'
 const CACHE_KEY = 'tournament-cache'
 
-export function subscribeTournament(callback) {
+export function subscribeTournament(callback, onError) {
   const tournamentRef = ref(db, TOURNAMENT_PATH)
-  return onValue(tournamentRef, (snapshot) => {
-    callback(snapshot.exists() ? snapshot.val() : null)
-  })
+  return onValue(
+    tournamentRef,
+    (snapshot) => {
+      callback(snapshot.exists() ? snapshot.val() : null)
+    },
+    onError,
+  )
 }
 
 export function writeTournament(data) {
@@ -17,8 +21,12 @@ export function writeTournament(data) {
 }
 
 export function loadCache() {
-  const raw = localStorage.getItem(CACHE_KEY)
-  return raw ? JSON.parse(raw) : null
+  try {
+    const raw = localStorage.getItem(CACHE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
 }
 
 export function saveCache(data) {

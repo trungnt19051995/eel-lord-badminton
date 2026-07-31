@@ -58,8 +58,14 @@ export function computeGroupStandings(group, matches) {
   return Object.values(stats).map((s) => ({ ...s, diff: s.scored - s.conceded }))
 }
 
+export function isGroupComplete(group, matches) {
+  const groupMatches = matches.filter((m) => m.group === group)
+  return groupMatches.length > 0 && groupMatches.every((m) => m.status === 'done')
+}
+
 // Thứ tự xếp hạng: điểm -> đối đầu trực tiếp (chỉ khi đúng 2 đội bằng điểm) -> hiệu số -> tổng điểm ghi -> không phân định được (Admin override)
 export function getGroupWinner(group, matches) {
+  if (!isGroupComplete(group, matches)) return null
   const standings = computeGroupStandings(group, matches)
   if (standings.length === 0) return null
 

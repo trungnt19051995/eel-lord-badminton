@@ -2,6 +2,7 @@
 import { computed, ref, watchEffect } from 'vue'
 import { useAuthStore } from '../store/authStore.js'
 import { useTournamentStore } from '../store/tournamentStore.js'
+import { resolveTeam } from '../utils/bracket.js'
 import TeamSlotDisplay from './TeamSlotDisplay.vue'
 
 const props = defineProps({ matchId: { type: String, required: true } })
@@ -9,6 +10,12 @@ const auth = useAuthStore()
 const store = useTournamentStore()
 
 const match = computed(() => store.matches.find((m) => m.id === props.matchId))
+const bothResolved = computed(
+  () =>
+    match.value &&
+    resolveTeam(match.value.team1, store.matches) != null &&
+    resolveTeam(match.value.team2, store.matches) != null,
+)
 
 const score1 = ref('')
 const score2 = ref('')
@@ -52,7 +59,7 @@ function saveScore() {
       <input
         :value="match.court"
         class="w-10 rounded border border-slate-300 px-1 py-0.5"
-        @change="store.updateMatchCourt(match.id, $event.target.value)"
+        @change="store.updateMatchCourt(match.id, Number($event.target.value))"
       />
       <span>{{ statusStyle.dot }} {{ statusStyle.text }}</span>
     </div>
@@ -64,7 +71,7 @@ function saveScore() {
       {{ match.score1 ?? '-' }} : {{ match.score2 ?? '-' }}
     </div>
 
-    <div v-if="auth.isAdmin && match.status !== 'done'" class="mt-2 flex items-center gap-2">
+    <div v-if="auth.isAdmin && bothResolved && match.status !== 'done'" class="mt-2 flex items-center gap-2">
       <input v-model="score1" type="number" min="0" class="w-14 rounded border border-slate-300 px-1 py-0.5 text-sm" @focus="editingScore = true" @blur="editingScore = false" />
       <span>-</span>
       <input v-model="score2" type="number" min="0" class="w-14 rounded border border-slate-300 px-1 py-0.5 text-sm" @focus="editingScore = true" @blur="editingScore = false" />
