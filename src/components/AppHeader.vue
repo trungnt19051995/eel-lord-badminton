@@ -10,6 +10,7 @@ const route = useRoute()
 
 const headerEl = ref(null)
 let resizeObserver = null
+const logoUrl = `${import.meta.env.BASE_URL}eel-logo.png`
 
 // Ngày/giờ/địa điểm lấy từ 3 thẻ đầu của "Thông tin thi đấu" ở trang Thể lệ — Admin sửa ở đó thì header cũng đổi theo
 const eventSummary = computed(() =>
@@ -43,7 +44,7 @@ onBeforeUnmount(() => {
   <header ref="headerEl" class="sticky top-0 z-50 bg-blue-700 text-white shadow-md">
     <div class="mx-auto flex max-w-[1200px] items-center gap-3 px-4 py-3">
       <img
-        src="/eel-logo.png"
+        :src="logoUrl"
         alt="Đồng Lươn Badminton Cup"
         class="aspect-square max-h-20 shrink-0 self-stretch rounded-full object-cover ring-2 ring-white/50"
       />
