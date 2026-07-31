@@ -58,7 +58,7 @@ function chipClass(group, matchId) {
 
 <template>
   <div class="w-full">
-    <div :class="['flex flex-wrap items-center justify-between gap-2 rounded-t-xl px-4 py-3 text-white', colorClass]">
+    <div :data-round-banner="round" :class="['flex flex-wrap items-center justify-between gap-2 rounded-t-xl px-4 py-3 text-white', colorClass]">
       <div>
         <span class="inline-block rounded bg-black/20 px-2 py-0.5 text-[11px] font-bold uppercase">Vòng {{ round }} · {{ timeRange }}</span>
         <p class="mt-1 text-base font-extrabold uppercase">{{ title }}</p>
