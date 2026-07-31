@@ -7,8 +7,7 @@ const CACHE_KEY = 'tournament-cache'
 export function subscribeTournament(callback) {
   const tournamentRef = ref(db, TOURNAMENT_PATH)
   return onValue(tournamentRef, (snapshot) => {
-    const data = snapshot.val()
-    if (data) callback(data)
+    callback(snapshot.exists() ? snapshot.val() : null)
   })
 }
 

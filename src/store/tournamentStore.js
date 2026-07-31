@@ -17,14 +17,14 @@ export const useTournamentStore = defineStore('tournament', {
       if (cached) this.$patch(cached)
 
       subscribeTournament((data) => {
-        this.$patch(data)
         this.loaded = true
-        saveCache(data)
+        if (data) {
+          this.$patch(data)
+          saveCache(data)
+        } else {
+          this.seedIfEmpty()
+        }
       })
-
-      setTimeout(() => {
-        if (!this.loaded) this.seedIfEmpty()
-      }, 2000)
     },
     seedIfEmpty() {
       if (this.couples.length > 0) return
