@@ -22,6 +22,9 @@ export const useAuthStore = defineStore('auth', {
       this.isAdmin = false
       sessionStorage.removeItem(SESSION_KEY)
     },
+    verifyPassword(password) {
+      return password === ADMIN_PASSWORD
+    },
     openPanel() {
       this.isPanelOpen = true
     },

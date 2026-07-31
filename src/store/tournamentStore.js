@@ -137,10 +137,11 @@ export const useTournamentStore = defineStore('tournament', {
       this.persist()
     },
     resetData() {
-      this.$patch({
-        couples: JSON.parse(JSON.stringify(defaultCouples)),
-        matches: JSON.parse(JSON.stringify(defaultMatches)),
-        rulesContent: JSON.parse(JSON.stringify(defaultRulesContent)),
+      // Chỉ xoá tỉ số/trạng thái mọi trận về "Chưa thi đấu" — không đụng tới tên cặp, giờ/sân, override hay nội dung Thể lệ.
+      this.matches.forEach((match) => {
+        match.score1 = null
+        match.score2 = null
+        match.status = 'pending'
       })
       this.persist()
     },

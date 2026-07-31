@@ -2,14 +2,12 @@
 import { ref } from 'vue'
 import { useAuthStore } from '../store/authStore.js'
 import { useTournamentStore } from '../store/tournamentStore.js'
-import { downloadJSON, readJSONFile } from '../utils/exportImport.js'
 
 const auth = useAuthStore()
 const store = useTournamentStore()
 const username = ref('')
 const password = ref('')
 const error = ref('')
-const importError = ref('')
 
 function handleLogin() {
   const ok = auth.login(username.value, password.value)
@@ -28,27 +26,16 @@ function handleLogout() {
   auth.closePanel()
 }
 
-function handleExport() {
-  downloadJSON(store.exportData(), 'tournament.json')
-}
-
-async function handleImport(event) {
-  const file = event.target.files[0]
-  if (!file) return
-  try {
-    const data = await readJSONFile(file)
-    store.importData(data)
-    importError.value = ''
-  } catch (e) {
-    importError.value = e.message
-  }
-  event.target.value = ''
-}
-
 function handleReset() {
-  if (confirm('Reset toàn bộ dữ liệu về mặc định? Hành động này ảnh hưởng tất cả người đang xem.')) {
-    store.resetData()
+  const input = prompt(
+    'Nhập lại mật khẩu Admin để xác nhận: xoá tỉ số & trạng thái của TẤT CẢ các trận, đưa về "Chưa thi đấu". Hành động này ảnh hưởng tất cả người đang xem.',
+  )
+  if (input === null) return
+  if (!auth.verifyPassword(input)) {
+    alert('Sai mật khẩu — đã huỷ Reset.')
+    return
   }
+  store.resetData()
 }
 </script>
 
@@ -89,15 +76,9 @@ function handleReset() {
             Lỗi đồng bộ dữ liệu: {{ store.syncError }} — kiểm tra kết nối mạng hoặc cấu hình Firebase.
           </p>
           <div class="flex flex-wrap gap-2">
-            <button class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" @click="handleExport">Export JSON</button>
-            <label class="cursor-pointer rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700">
-              Import JSON
-              <input type="file" accept="application/json" class="hidden" @change="handleImport" />
-            </label>
-            <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset dữ liệu</button>
+            <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset tỉ số</button>
             <button class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700" @click="handleLogout">Đăng xuất</button>
           </div>
-          <p v-if="importError" class="text-sm text-red-600">{{ importError }}</p>
         </div>
       </div>
     </div>
