@@ -55,6 +55,15 @@ onBeforeUnmount(() => {
         Lịch thi đấu
       </RouterLink>
       <RouterLink
+        to="/cap-dau"
+        :class="[
+          'shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors',
+          route.path === '/cap-dau' ? 'bg-white text-blue-700' : 'text-blue-50 hover:bg-blue-600',
+        ]"
+      >
+        Cặp đấu
+      </RouterLink>
+      <RouterLink
         to="/the-le"
         :class="[
           'shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors',

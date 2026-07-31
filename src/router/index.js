@@ -1,11 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import CoupleView from '../views/CoupleView.vue'
 import RulesView from '../views/RulesView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
+    { path: '/cap-dau', name: 'couples', component: CoupleView },
     { path: '/the-le', name: 'rules', component: RulesView },
   ],
   scrollBehavior(to) {

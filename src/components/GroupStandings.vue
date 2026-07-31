@@ -33,9 +33,8 @@ function coupleLabel(coupleId) {
 
 <template>
   <div>
-    <div :class="['flex items-center justify-between px-3 py-2 text-white', accentClass]">
+    <div :class="['px-3 py-2 text-white', accentClass]">
       <span class="text-sm font-bold">Bảng {{ group }}</span>
-      <span class="text-[11px] font-semibold uppercase opacity-90">Nhất bảng = {{ group[0] }} Nhất {{ group.slice(1) }}</span>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-xs">
