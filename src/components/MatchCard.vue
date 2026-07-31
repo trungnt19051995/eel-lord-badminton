@@ -12,7 +12,10 @@ const match = computed(() => store.matches.find((m) => m.id === props.matchId))
 
 const score1 = ref('')
 const score2 = ref('')
+const editingScore = ref(false)
+
 watchEffect(() => {
+  if (editingScore.value) return
   score1.value = match.value?.score1 ?? ''
   score2.value = match.value?.score2 ?? ''
 })
@@ -62,9 +65,9 @@ function saveScore() {
     </div>
 
     <div v-if="auth.isAdmin && match.status !== 'done'" class="mt-2 flex items-center gap-2">
-      <input v-model="score1" type="number" min="0" class="w-14 rounded border border-slate-300 px-1 py-0.5 text-sm" />
+      <input v-model="score1" type="number" min="0" class="w-14 rounded border border-slate-300 px-1 py-0.5 text-sm" @focus="editingScore = true" @blur="editingScore = false" />
       <span>-</span>
-      <input v-model="score2" type="number" min="0" class="w-14 rounded border border-slate-300 px-1 py-0.5 text-sm" />
+      <input v-model="score2" type="number" min="0" class="w-14 rounded border border-slate-300 px-1 py-0.5 text-sm" @focus="editingScore = true" @blur="editingScore = false" />
       <button class="rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white" @click="saveScore">Lưu</button>
     </div>
     <button
