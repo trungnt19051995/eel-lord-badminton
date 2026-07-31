@@ -1,28 +1,15 @@
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from '../store/authStore.js'
 import { useTournamentStore } from '../store/tournamentStore.js'
 
 const store = useTournamentStore()
+const auth = useAuthStore()
 const route = useRoute()
 
-const navItems = [
-  { id: 'couples', label: 'Cặp đấu', hash: '#couples' },
-  { id: 'schedule', label: 'Lịch thi đấu', hash: '#schedule' },
-  { id: 'rules', label: 'Thể lệ', to: '/the-le' },
-  { id: 'admin', label: 'Admin', hash: '#admin' },
-]
-const homeSectionIds = navItems.filter((n) => n.hash).map((n) => n.id)
-
-const activeId = ref('couples')
 const headerEl = ref(null)
-let sectionObserver = null
 let resizeObserver = null
-
-function isActive(item) {
-  if (item.to) return route.path === item.to
-  return route.path === '/' && activeId.value === item.id
-}
 
 // Đo chiều cao thật của header (thay đổi theo màn hình/chữ xuống dòng) rồi lưu vào biến CSS,
 // để mọi phần tử "sticky" hoặc "scroll-margin" khác trong trang luôn né đúng, không đoán số px cố định.
@@ -32,45 +19,13 @@ function syncHeaderHeight() {
   }
 }
 
-// Trang chủ được render/huỷ lại mỗi lần điều hướng qua Thể lệ rồi quay lại,
-// nên phải quan sát lại đúng các section mới mỗi lần trở về "/".
-async function setupSectionObserver() {
-  if (sectionObserver) sectionObserver.disconnect()
-  await nextTick()
-  const headerHeight = headerEl.value?.offsetHeight ?? 140
-  sectionObserver = new IntersectionObserver(
-    (entries) => {
-      const visible = entries.filter((e) => e.isIntersecting)
-      if (visible.length) {
-        visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        activeId.value = visible[0].target.id
-      }
-    },
-    { rootMargin: `-${headerHeight}px 0px -70% 0px`, threshold: [0, 0.25, 0.5, 0.75, 1] },
-  )
-  homeSectionIds.forEach((id) => {
-    const el = document.getElementById(id)
-    if (el) sectionObserver.observe(el)
-  })
-}
-
 onMounted(() => {
   syncHeaderHeight()
   resizeObserver = new ResizeObserver(syncHeaderHeight)
   if (headerEl.value) resizeObserver.observe(headerEl.value)
-  if (route.path === '/') setupSectionObserver()
 })
 
-watch(
-  () => route.path,
-  (path) => {
-    if (path === '/') setupSectionObserver()
-    else if (sectionObserver) sectionObserver.disconnect()
-  },
-)
-
 onBeforeUnmount(() => {
-  if (sectionObserver) sectionObserver.disconnect()
   if (resizeObserver) resizeObserver.disconnect()
 })
 </script>
@@ -91,17 +46,32 @@ onBeforeUnmount(() => {
     </div>
     <nav class="mx-auto flex max-w-[1200px] gap-1 overflow-x-auto px-4 pb-2 sm:gap-2">
       <RouterLink
-        v-for="item in navItems"
-        :key="item.id"
-        :to="item.to ?? { path: '/', hash: item.hash }"
+        to="/"
         :class="[
           'shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors',
-          isActive(item) ? 'bg-white text-blue-700' : 'text-blue-50 hover:bg-blue-600',
+          route.path === '/' ? 'bg-white text-blue-700' : 'text-blue-50 hover:bg-blue-600',
         ]"
-        @click="!item.to && (activeId = item.id)"
       >
-        {{ item.label }}
+        Lịch thi đấu
       </RouterLink>
+      <RouterLink
+        to="/the-le"
+        :class="[
+          'shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors',
+          route.path === '/the-le' ? 'bg-white text-blue-700' : 'text-blue-50 hover:bg-blue-600',
+        ]"
+      >
+        Thể lệ
+      </RouterLink>
+      <button
+        :class="[
+          'shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors',
+          auth.isPanelOpen ? 'bg-white text-blue-700' : 'text-blue-50 hover:bg-blue-600',
+        ]"
+        @click="auth.openPanel()"
+      >
+        Admin
+      </button>
     </nav>
   </header>
 </template>

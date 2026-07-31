@@ -47,31 +47,53 @@ function handleReset() {
 </script>
 
 <template>
-  <section id="admin" class="mx-auto max-w-md py-8">
-    <h2 class="mb-4 text-xl font-extrabold text-slate-900">Admin</h2>
+  <Teleport to="body">
+    <div
+      v-if="auth.isPanelOpen"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+      @click.self="auth.closePanel()"
+    >
+      <div class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-xl font-extrabold text-slate-900">Admin</h2>
+          <button
+            class="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Đóng"
+            @click="auth.closePanel()"
+          >
+            ✕
+          </button>
+        </div>
 
-    <form v-if="!auth.isAdmin" class="space-y-3" @submit.prevent="handleLogin">
-      <input v-model="username" type="text" placeholder="Tài khoản" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-      <input v-model="password" type="password" placeholder="Mật khẩu" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
-      <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
-      <button type="submit" class="w-full rounded-lg bg-blue-600 px-3 py-2 font-semibold text-white">Đăng nhập</button>
-    </form>
+        <form v-if="!auth.isAdmin" class="space-y-3" @submit.prevent="handleLogin">
+          <input v-model="username" type="text" placeholder="Tài khoản" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Mật khẩu"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2"
+          />
+          <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
+          <button type="submit" class="w-full rounded-lg bg-blue-600 px-3 py-2 font-semibold text-white">Đăng nhập</button>
+        </form>
 
-    <div v-else class="space-y-3">
-      <p class="text-sm text-emerald-700">Đã đăng nhập với quyền Admin.</p>
-      <p v-if="store.syncError" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-        Lỗi đồng bộ dữ liệu: {{ store.syncError }} — kiểm tra kết nối mạng hoặc cấu hình Firebase.
-      </p>
-      <div class="flex flex-wrap gap-2">
-        <button class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" @click="handleExport">Export JSON</button>
-        <label class="cursor-pointer rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700">
-          Import JSON
-          <input type="file" accept="application/json" class="hidden" @change="handleImport" />
-        </label>
-        <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset dữ liệu</button>
-        <button class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700" @click="auth.logout()">Đăng xuất</button>
+        <div v-else class="space-y-3">
+          <p class="text-sm text-emerald-700">Đã đăng nhập với quyền Admin.</p>
+          <p v-if="store.syncError" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            Lỗi đồng bộ dữ liệu: {{ store.syncError }} — kiểm tra kết nối mạng hoặc cấu hình Firebase.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white" @click="handleExport">Export JSON</button>
+            <label class="cursor-pointer rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700">
+              Import JSON
+              <input type="file" accept="application/json" class="hidden" @change="handleImport" />
+            </label>
+            <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset dữ liệu</button>
+            <button class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700" @click="auth.logout()">Đăng xuất</button>
+          </div>
+          <p v-if="importError" class="text-sm text-red-600">{{ importError }}</p>
+        </div>
       </div>
-      <p v-if="importError" class="text-sm text-red-600">{{ importError }}</p>
     </div>
-  </section>
+  </Teleport>
 </template>

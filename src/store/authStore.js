@@ -7,6 +7,7 @@ const SESSION_KEY = 'isAdmin'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAdmin: sessionStorage.getItem(SESSION_KEY) === 'true',
+    isPanelOpen: false,
   }),
   actions: {
     login(username, password) {
@@ -20,6 +21,12 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.isAdmin = false
       sessionStorage.removeItem(SESSION_KEY)
+    },
+    openPanel() {
+      this.isPanelOpen = true
+    },
+    closePanel() {
+      this.isPanelOpen = false
     },
   },
 })
