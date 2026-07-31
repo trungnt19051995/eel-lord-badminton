@@ -8,7 +8,16 @@ const store = useTournamentStore()
 
 const rows = computed(() => {
   const stats = computeGroupStandings(props.group, store.matches)
-  return [...stats].sort((a, b) => b.points - a.points || b.diff - a.diff || b.scored - a.scored)
+  const winner = getGroupWinner(props.group, store.matches)
+  const sorted = [...stats].sort((a, b) => b.points - a.points || b.diff - a.diff || b.scored - a.scored)
+  if (winner != null) {
+    const idx = sorted.findIndex((r) => r.coupleId === winner)
+    if (idx > 0) {
+      const [w] = sorted.splice(idx, 1)
+      sorted.unshift(w)
+    }
+  }
+  return sorted
 })
 const winnerId = computed(() => getGroupWinner(props.group, store.matches))
 
