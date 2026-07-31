@@ -40,7 +40,7 @@ function chooseOverride(event) {
       <span
         :class="[
           'truncate',
-          coupleId != null ? 'font-semibold text-slate-900' : 'italic text-slate-400',
+          coupleId != null ? 'font-bold text-slate-900' : 'font-medium text-slate-400',
           isWinner ? 'rounded border border-emerald-600 px-1' : '',
         ]"
       >

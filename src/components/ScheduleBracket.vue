@@ -36,7 +36,7 @@ function jumpTo(round) {
 
 <template>
   <section id="schedule" class="py-8">
-    <h2 class="mb-4 text-lg font-bold text-slate-900">Lịch thi đấu &amp; Kết quả</h2>
+    <h2 class="mb-4 text-xl font-extrabold text-slate-900">Lịch thi đấu &amp; Kết quả</h2>
 
     <!-- Mobile: tab xem nhanh, dính cố định dưới header (chiều cao header đo tự động, xem AppHeader.vue) để luôn bấm được khi cuộn -->
     <div

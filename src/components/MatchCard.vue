@@ -96,7 +96,7 @@ function resetMatch() {
           @focus="editingScore = true"
           @blur="editingScore = false"
         />
-        <span v-else-if="match.score1 != null" class="text-sm font-bold text-slate-900">{{ match.score1 }}</span>
+        <span v-else-if="match.score1 != null" class="text-base font-extrabold text-slate-900">{{ match.score1 }}</span>
       </TeamSlotDisplay>
       <TeamSlotDisplay :match-id="match.id" slot-key="team2" :chip-class="chipClass">
         <input
@@ -108,7 +108,7 @@ function resetMatch() {
           @focus="editingScore = true"
           @blur="editingScore = false"
         />
-        <span v-else-if="match.score2 != null" class="text-sm font-bold text-slate-900">{{ match.score2 }}</span>
+        <span v-else-if="match.score2 != null" class="text-base font-extrabold text-slate-900">{{ match.score2 }}</span>
       </TeamSlotDisplay>
     </div>
 

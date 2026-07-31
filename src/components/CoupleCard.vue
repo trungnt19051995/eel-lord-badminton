@@ -15,7 +15,7 @@ function onEdit(field, event) {
   <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
     <div v-if="!auth.isAdmin" class="flex flex-wrap items-baseline gap-x-2">
       <span class="text-xs font-semibold text-slate-400">Cặp {{ couple.id }}:</span>
-      <span class="text-base font-semibold text-slate-900">{{ couple.maleName }} &amp; {{ couple.femaleName }}</span>
+      <span class="text-base font-bold text-slate-900">{{ couple.maleName }} &amp; {{ couple.femaleName }}</span>
     </div>
     <div v-else class="flex flex-col gap-2">
       <p class="text-xs font-semibold text-slate-400">Cặp {{ couple.id }}</p>
