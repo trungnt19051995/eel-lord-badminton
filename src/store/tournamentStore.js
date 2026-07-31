@@ -82,6 +82,14 @@ export const useTournamentStore = defineStore('tournament', {
       match.status = 'live'
       this.persist()
     },
+    resetMatch(matchId) {
+      const match = this.matches.find((m) => m.id === matchId)
+      if (!match) return
+      match.score1 = null
+      match.score2 = null
+      match.status = 'pending'
+      this.persist()
+    },
     updateMatchCourt(matchId, court) {
       const match = this.matches.find((m) => m.id === matchId)
       if (!match) return

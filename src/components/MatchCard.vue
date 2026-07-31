@@ -55,6 +55,12 @@ function saveScore() {
   const s2 = score2.value === '' ? null : Number(score2.value)
   store.updateMatchScore(props.matchId, s1, s2)
 }
+
+function resetMatch() {
+  if (confirm('Xoá tỉ số và đặt lại trận này về trạng thái "Chưa thi đấu"? Không thể hoàn tác.')) {
+    store.resetMatch(props.matchId)
+  }
+}
 </script>
 
 <template>
@@ -133,7 +139,14 @@ function saveScore() {
       class="mt-2 w-full rounded bg-slate-200 px-2 py-1 text-xs font-semibold text-slate-700"
       @click="store.reopenMatch(match.id)"
     >
-      Mở lại trận
+      Mở lại trận (giữ tỉ số)
+    </button>
+    <button
+      v-if="auth.isAdmin && match.status !== 'pending'"
+      class="mt-2 w-full rounded border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-700"
+      @click="resetMatch"
+    >
+      Đặt lại trận (xoá tỉ số)
     </button>
   </div>
 </template>
