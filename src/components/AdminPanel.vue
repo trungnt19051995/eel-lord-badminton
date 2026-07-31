@@ -75,9 +75,9 @@ function handleReset() {
           <p v-if="store.syncError" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
             Lỗi đồng bộ dữ liệu: {{ store.syncError }} — kiểm tra kết nối mạng hoặc cấu hình Firebase.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset tỉ số</button>
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <button class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700" @click="handleLogout">Đăng xuất</button>
+            <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset tỉ số</button>
           </div>
         </div>
       </div>
