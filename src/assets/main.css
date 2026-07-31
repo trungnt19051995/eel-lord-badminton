@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --header-height: 140px;
+}
+
 html {
-  scroll-padding-top: 4rem;
+  scroll-padding-top: var(--header-height);
 }

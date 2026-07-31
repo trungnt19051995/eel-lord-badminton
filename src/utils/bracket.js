@@ -99,14 +99,29 @@ export function getGroupWinner(group, matches) {
   return null
 }
 
-export function describeTeamSlot(teamSlot, matches, couples) {
-  const coupleId = resolveTeam(teamSlot, matches)
-  if (coupleId != null) {
-    const couple = couples.find((c) => c.id === coupleId)
-    return couple ? `${couple.maleName} & ${couple.femaleName}` : 'Không xác định'
+const BRANCH_FINAL_LABELS = { m19: 'NHẤT A', m20: 'NHẤT B' }
+
+export function getSlotLabel(teamSlot, matches) {
+  if (!teamSlot) return null
+  if (teamSlot.type === 'couple') return `Cặp ${teamSlot.coupleId}`
+
+  if (teamSlot.type === 'winner' && BRANCH_FINAL_LABELS[teamSlot.matchId]) {
+    return BRANCH_FINAL_LABELS[teamSlot.matchId]
   }
-  if (teamSlot.type === 'winner') return `Chờ thắng trận ${teamSlot.matchId}`
-  if (teamSlot.type === 'loser') return `Chờ thua trận ${teamSlot.matchId}`
-  if (teamSlot.type === 'groupWinner') return `Chờ Nhất bảng ${teamSlot.group}`
-  return 'Chưa xác định'
+
+  if (teamSlot.type === 'winner' || teamSlot.type === 'loser') {
+    const round1Matches = matches
+      .filter((m) => m.round === 1)
+      .slice()
+      .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
+    const idx = round1Matches.findIndex((m) => m.id === teamSlot.matchId)
+    if (idx === -1) return null
+    return `${teamSlot.type === 'winner' ? 'A' : 'B'}${idx + 1}`
+  }
+
+  if (teamSlot.type === 'groupWinner') {
+    return `${teamSlot.group[0]} NHẤT ${teamSlot.group.slice(1)}`
+  }
+
+  return null
 }

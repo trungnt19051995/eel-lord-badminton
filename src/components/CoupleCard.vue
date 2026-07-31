@@ -13,11 +13,12 @@ function onEdit(field, event) {
 
 <template>
   <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-    <p class="text-xs font-semibold text-slate-400">Cặp #{{ couple.id }}</p>
-    <div v-if="!auth.isAdmin" class="mt-1 text-base font-semibold text-slate-900">
-      {{ couple.maleName }} &amp; {{ couple.femaleName }}
+    <div v-if="!auth.isAdmin" class="flex flex-wrap items-baseline gap-x-2">
+      <span class="text-xs font-semibold text-slate-400">Cặp {{ couple.id }}:</span>
+      <span class="text-base font-semibold text-slate-900">{{ couple.maleName }} &amp; {{ couple.femaleName }}</span>
     </div>
-    <div v-else class="mt-1 flex flex-col gap-2">
+    <div v-else class="flex flex-col gap-2">
+      <p class="text-xs font-semibold text-slate-400">Cặp {{ couple.id }}</p>
       <input :value="couple.maleName" class="rounded-lg border border-slate-300 px-2 py-1 text-sm" @change="onEdit('maleName', $event)" />
       <input :value="couple.femaleName" class="rounded-lg border border-slate-300 px-2 py-1 text-sm" @change="onEdit('femaleName', $event)" />
     </div>

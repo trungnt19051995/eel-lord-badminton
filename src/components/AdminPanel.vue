@@ -47,7 +47,7 @@ function handleReset() {
 </script>
 
 <template>
-  <section id="admin" class="mx-auto max-w-md px-4 py-8">
+  <section id="admin" class="mx-auto max-w-md py-8">
     <h2 class="mb-4 text-lg font-bold text-slate-900">Admin</h2>
 
     <form v-if="!auth.isAdmin" class="space-y-3" @submit.prevent="handleLogin">
