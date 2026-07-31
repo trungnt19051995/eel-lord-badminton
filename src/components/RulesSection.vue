@@ -1,16 +1,20 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 import { useAuthStore } from '../store/authStore.js'
 import { useTournamentStore } from '../store/tournamentStore.js'
 
 const auth = useAuthStore()
 const store = useTournamentStore()
-const draft = ref('')
 const editingRules = ref(false)
-watchEffect(() => {
-  if (editingRules.value) return
-  draft.value = store.rules
-})
+const draft = ref(store.rules)
+
+watch(
+  () => store.rules,
+  (v) => {
+    if (editingRules.value) return
+    draft.value = v
+  },
+)
 
 function save() {
   store.updateRules(draft.value)

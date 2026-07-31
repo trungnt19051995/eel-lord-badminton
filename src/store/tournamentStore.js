@@ -36,8 +36,8 @@ export const useTournamentStore = defineStore('tournament', {
     seedIfEmpty() {
       if (this.couples.length > 0) return
       this.$patch({
-        couples: structuredClone(defaultCouples),
-        matches: structuredClone(defaultMatches),
+        couples: JSON.parse(JSON.stringify(defaultCouples)),
+        matches: JSON.parse(JSON.stringify(defaultMatches)),
         rules: defaultRules,
       })
       this.persist()
@@ -116,8 +116,8 @@ export const useTournamentStore = defineStore('tournament', {
     },
     resetData() {
       this.$patch({
-        couples: structuredClone(defaultCouples),
-        matches: structuredClone(defaultMatches),
+        couples: JSON.parse(JSON.stringify(defaultCouples)),
+        matches: JSON.parse(JSON.stringify(defaultMatches)),
         rules: defaultRules,
       })
       this.persist()

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useAuthStore } from '../store/authStore.js'
 import { useTournamentStore } from '../store/tournamentStore.js'
 import { resolveTeam } from '../utils/bracket.js'
@@ -21,11 +21,15 @@ const score1 = ref('')
 const score2 = ref('')
 const editingScore = ref(false)
 
-watchEffect(() => {
-  if (editingScore.value) return
-  score1.value = match.value?.score1 ?? ''
-  score2.value = match.value?.score2 ?? ''
-})
+watch(
+  () => [match.value?.score1, match.value?.score2],
+  ([s1, s2]) => {
+    if (editingScore.value) return
+    score1.value = s1 ?? ''
+    score2.value = s2 ?? ''
+  },
+  { immediate: true },
+)
 
 const statusStyle = computed(
   () =>
@@ -58,8 +62,10 @@ function saveScore() {
       <span>· Sân</span>
       <input
         :value="match.court"
+        type="number"
+        min="1"
         class="w-10 rounded border border-slate-300 px-1 py-0.5"
-        @change="store.updateMatchCourt(match.id, Number($event.target.value))"
+        @change="store.updateMatchCourt(match.id, Number($event.target.value) || match.court)"
       />
       <span>{{ statusStyle.dot }} {{ statusStyle.text }}</span>
     </div>
