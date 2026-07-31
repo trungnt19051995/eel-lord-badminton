@@ -60,4 +60,43 @@ export const defaultMatches = [
   baseMatch('m21', 4, null, 1, '21:15-21:30', winnerSlot('m19'), winnerSlot('m20')),
 ]
 
-export const defaultRules = 'Thể lệ giải đấu sẽ được Admin cập nhật tại đây.'
+export const defaultRulesContent = {
+  announcementTitle: 'ĐỒNG LƯƠN BADMINTON CUP 2026',
+  announcementBody:
+    'Thông báo: Đúng 19h30 - 21h30 tối thứ 6 ngày 31/7/2026 giải đấu "Đồng Lươn Badminton Cup 2026" sẽ được khởi tranh. Yêu cầu các lông thủ tham gia giải có mặt đúng giờ.\n\n' +
+    'Mình cập nhật một số luật đặc biệt của giải: Nam không được phát bắn hay cao sâu Nữ (Nam phát bắn, cao sâu Nam thì bình thường), Nữ không được phát bắn nữ nhưng phát cao sâu bình thường (Nữ được phát bắn Nam). Các trường hợp phát bắn hay cao sâu vi phạm bị xử đánh lại, nếu cố tình lần 2 bị trừ 1 điểm. Nam đập cầu trúng đầu Nữ bị trừ 1 điểm, Nữ đập cầu trúng đầu Nữ đánh lại tình huống không bị trừ điểm.\n\n' +
+    'Thời gian thi đấu 19h30 - 21h30. Đến muộn 10 phút - 29 phút khi gọi vào trận bị trừ 3 - 5 điểm. Muộn 30 phút trở đi xử thua (Trường hợp đặc biệt BTC sẽ có thể xử lý khác).',
+  announcementClosing:
+    'Trân trọng kính mời tất cả các lông thủ đến xem và cổ vũ cho các vận động viên để giải đấu thêm sôi động, kịch tính, và hoàn thành mỹ mãn. Thanks All!',
+  serveRules: [
+    {
+      situation: 'Nam phát cầu cho Nữ',
+      handling: 'KHÔNG ĐƯỢC phát bắn hay cao sâu.\nVi phạm: Xử đánh lại. Cố tình vi phạm lần 2 → trừ 1 điểm.',
+    },
+    { situation: 'Nam phát cầu cho Nam', handling: 'Phát bắn & cao sâu bình thường' },
+    {
+      situation: 'Nữ phát cầu cho Nữ',
+      handling: 'KHÔNG ĐƯỢC phát bắn, nhưng được phát cao sâu bình thường.\nVi phạm: Xử đánh lại. Cố tình vi phạm lần 2 → trừ 1 điểm.',
+    },
+    { situation: 'Nữ phát cầu cho Nam', handling: 'Được phát bắn & cao sâu bình thường' },
+    { situation: 'Nam đập cầu trúng đầu Nữ', handling: 'Trừ 1 điểm của bên đập' },
+    { situation: 'Nữ đập cầu trúng đầu Nữ', handling: 'Đánh lại tình huống (không bị trừ điểm)' },
+  ],
+  officialTime: '19h30 - 21h30 tối thứ 6 ngày 31/07/2026.',
+  officialTimeNote: 'Yêu cầu tất cả các lông thủ tham gia giải có mặt đúng giờ để điểm danh & khởi động.',
+  latePenalties:
+    'Muộn 10 - 29 phút khi gọi vào trận: Bị trừ 3 - 5 điểm.\nMuộn từ 30 phút trở đi: Xử thua trận.\n(Trường hợp đặc biệt BTC sẽ có thể xem xét xử lý khác).',
+  formatRules:
+    'Đội hình: Mỗi đội là một cặp nam - nữ, bốc thăm ngẫu nhiên từ 12 lông thủ nam và 12 lông thủ nữ.\n' +
+    'Vòng 1 – loại trực tiếp: 6 trận. Cặp thắng vào Nhánh A (A1-A6), cặp thua vào Nhánh B (B1-B6). Thua vòng 1 vẫn còn nguyên cơ hội vô địch.\n' +
+    'Vòng 2 – vòng tròn: 4 bảng × 3 cặp, mỗi bảng 3 trận. Mỗi cặp đánh 2 trận. Nhất bảng đi tiếp.\n' +
+    'Xếp hạng bảng: Số trận thắng → hiệu số điểm → tổng điểm ghi được.\n' +
+    'Vòng 3 – chung kết nhánh: Nhất bảng A1 gặp nhất bảng A2, nhất bảng B1 gặp nhất bảng B2.\n' +
+    'Vòng 4 – chung kết tổng: Vô địch nhánh A gặp Vô địch nhánh B để xác định Lươn Chúa thực sự của giải.',
+  eventInfoCards: [
+    { label: 'Ngày thi đấu', value: 'Thứ 6, 31/07/2026', note: '' },
+    { label: 'Giờ', value: '19h30 - 21h30', note: 'Có mặt đúng 19h30' },
+    { label: 'Địa điểm', value: 'THPT Khương Đình', note: 'Sân 1 · 2 · 3' },
+    { label: 'Trận cuối', value: 'Tranh ngôi Lươn Chúa', note: 'Vô địch A gặp Vô địch B' },
+  ],
+}

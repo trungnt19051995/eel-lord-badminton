@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../store/authStore.js'
 import { useTournamentStore } from '../store/tournamentStore.js'
@@ -10,6 +10,15 @@ const route = useRoute()
 
 const headerEl = ref(null)
 let resizeObserver = null
+
+// Ngày/giờ/địa điểm lấy từ 3 thẻ đầu của "Thông tin thi đấu" ở trang Thể lệ — Admin sửa ở đó thì header cũng đổi theo
+const eventSummary = computed(() =>
+  (store.rulesContent.eventInfoCards ?? [])
+    .slice(0, 3)
+    .map((c) => c.value)
+    .filter(Boolean)
+    .join(' · '),
+)
 
 // Đo chiều cao thật của header (thay đổi theo màn hình/chữ xuống dòng) rồi lưu vào biến CSS,
 // để mọi phần tử "sticky" hoặc "scroll-margin" khác trong trang luôn né đúng, không đoán số px cố định.
@@ -39,9 +48,9 @@ onBeforeUnmount(() => {
         class="aspect-square max-h-20 shrink-0 self-stretch rounded-full object-cover ring-2 ring-white/50"
       />
       <div class="min-w-0">
-        <p class="text-xl font-extrabold leading-tight sm:text-2xl">Đồng Lươn Badminton Cup 2026</p>
-        <p class="mt-1 text-xs text-blue-50 sm:text-sm">Thứ 6 · 31/07/2026 · 19h30 – 21h30 · Sân 1-2-3 THPT Khương Đình</p>
-        <p class="text-xs text-blue-50 sm:text-sm">{{ store.couples.length }} cặp đôi nam nữ · {{ store.matches.length }} trận · 1 Lươn Chúa</p>
+        <p class="text-xl font-extrabold leading-tight sm:text-2xl">{{ store.rulesContent.announcementTitle }}</p>
+        <p class="mt-1 text-xs text-blue-50 sm:text-sm">{{ eventSummary }}</p>
+        <p class="text-xs text-blue-50 sm:text-sm">{{ store.couples.length }} cặp đôi · {{ store.matches.length }} trận · 1 Lươn Chúa</p>
       </div>
     </div>
     <nav class="mx-auto flex max-w-[1200px] gap-1 overflow-x-auto px-4 pb-2 sm:gap-2">

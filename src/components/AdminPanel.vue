@@ -19,7 +19,13 @@ function handleLogin() {
     error.value = ''
     username.value = ''
     password.value = ''
+    auth.closePanel()
   }
+}
+
+function handleLogout() {
+  auth.logout()
+  auth.closePanel()
 }
 
 function handleExport() {
@@ -89,7 +95,7 @@ function handleReset() {
               <input type="file" accept="application/json" class="hidden" @change="handleImport" />
             </label>
             <button class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="handleReset">Reset dữ liệu</button>
-            <button class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700" @click="auth.logout()">Đăng xuất</button>
+            <button class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700" @click="handleLogout">Đăng xuất</button>
           </div>
           <p v-if="importError" class="text-sm text-red-600">{{ importError }}</p>
         </div>

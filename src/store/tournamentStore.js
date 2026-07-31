@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { defaultCouples, defaultMatches, defaultRules } from '../data/defaultData.js'
+import { defaultCouples, defaultMatches, defaultRulesContent } from '../data/defaultData.js'
 import { subscribeTournament, writeTournament, loadCache, saveCache } from '../utils/storage.js'
 
 let persistTimer = null
@@ -8,7 +8,7 @@ export const useTournamentStore = defineStore('tournament', {
   state: () => ({
     couples: [],
     matches: [],
-    rules: '',
+    rulesContent: {},
     loaded: false,
     syncError: null,
   }),
@@ -23,6 +23,11 @@ export const useTournamentStore = defineStore('tournament', {
           this.syncError = null
           if (data) {
             this.$patch(data)
+            // Dữ liệu cũ (trước khi có trang Thể lệ soạn theo cấu trúc) sẽ chưa có rulesContent — bù vào mặc định rồi lưu lại.
+            if (!this.rulesContent || Object.keys(this.rulesContent).length === 0) {
+              this.rulesContent = JSON.parse(JSON.stringify(defaultRulesContent))
+              this.persist()
+            }
             saveCache(data)
           } else {
             this.seedIfEmpty()
@@ -38,14 +43,14 @@ export const useTournamentStore = defineStore('tournament', {
       this.$patch({
         couples: JSON.parse(JSON.stringify(defaultCouples)),
         matches: JSON.parse(JSON.stringify(defaultMatches)),
-        rules: defaultRules,
+        rulesContent: JSON.parse(JSON.stringify(defaultRulesContent)),
       })
       this.persist()
     },
     persist() {
       clearTimeout(persistTimer)
       persistTimer = setTimeout(() => {
-        const data = { couples: this.couples, matches: this.matches, rules: this.rules }
+        const data = { couples: this.couples, matches: this.matches, rulesContent: this.rulesContent }
         writeTournament(data)
           .then(() => {
             this.syncError = null
@@ -108,25 +113,34 @@ export const useTournamentStore = defineStore('tournament', {
       match[slotKey].override = coupleId
       this.persist()
     },
-    updateRules(text) {
-      this.rules = text
+    updateRulesContent(path, value) {
+      const keys = path.split('.')
+      let obj = this.rulesContent
+      for (let i = 0; i < keys.length - 1; i++) {
+        obj = obj[keys[i]]
+      }
+      obj[keys[keys.length - 1]] = value
       this.persist()
     },
     exportData() {
-      return { couples: this.couples, matches: this.matches, rules: this.rules }
+      return { couples: this.couples, matches: this.matches, rulesContent: this.rulesContent }
     },
     importData(data) {
       if (!data || !Array.isArray(data.couples) || !Array.isArray(data.matches)) {
         throw new Error('File không đúng định dạng tournament.json')
       }
-      this.$patch({ couples: data.couples, matches: data.matches, rules: data.rules || '' })
+      this.$patch({
+        couples: data.couples,
+        matches: data.matches,
+        rulesContent: data.rulesContent || JSON.parse(JSON.stringify(defaultRulesContent)),
+      })
       this.persist()
     },
     resetData() {
       this.$patch({
         couples: JSON.parse(JSON.stringify(defaultCouples)),
         matches: JSON.parse(JSON.stringify(defaultMatches)),
-        rules: defaultRules,
+        rulesContent: JSON.parse(JSON.stringify(defaultRulesContent)),
       })
       this.persist()
     },
